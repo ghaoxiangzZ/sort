@@ -26,7 +26,7 @@ public class SortTest {
 	@Autowired
 	private SortService sortService;
 
-	private int[] array = {21, 33, 55, 20, 34, 1, 5, 7, 9, 2, 4, 77, 6, 8, 233, 156};
+	private int[] array = {1, 3, 2, 7, 9};
 
 	/**
 	 * 测试冒泡排序
@@ -64,6 +64,21 @@ public class SortTest {
 	@Test
 	public void insertionSortTest() {
 		array = sortService.insertionSort(array);
+		for (int i = 0; i < array.length; i++) {
+			if (i != array.length - 1) {
+				System.out.print(array[i] + ",");
+			} else {
+				System.out.print(array[i]);
+			}
+		}
+	}
+
+	/**
+	 * 测试希尔排序
+	 */
+	@Test
+	public void shellSortTest() {
+		array = sortService.shellSort(array);
 		for (int i = 0; i < array.length; i++) {
 			if (i != array.length - 1) {
 				System.out.print(array[i] + ",");

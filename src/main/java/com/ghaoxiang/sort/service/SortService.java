@@ -29,7 +29,9 @@ import org.springframework.stereotype.Service;
 public class SortService {
 
     /**
-     * 冒泡排序
+     * 冒泡排序：
+     * 1、从左至右开始比较，如果左边的数值大于右边的数值，则交换位置，此时，数组末尾为数值最大
+     * 2、重复步骤1，直到得到一个数值从小到大排列的数组
      * @param array
      * @return int[]
      */
@@ -37,9 +39,13 @@ public class SortService {
         if (array.length <= 1) {
             return array;
         }
+        // 外层循环从数组下标第0位开始遍历到下标n-1
         for (int i = 0; i < array.length; i++) {
+            // 内层循环从数组下标0遍历到下标n-1-i
             for (int j = 0; j < array.length - 1 - i; j++) {
+                // 左边数值大于右边
                 if (array[j] > array[j+1]) {
+                   // 交换左右的数值
                     int temp = array[j+1];
                     array[j+1] = array[j];
                     array[j] = temp;
@@ -50,7 +56,11 @@ public class SortService {
     }
 
     /**
-     * 选择排序
+     * 选择排序：
+     * 1、定义一个最小下标minIndex，默认为0
+     * 2、找出数组中数值最小的数的下标并赋值minIndex
+     * 3、将array[minIndex]和array[0]的值互换,此时数组中最小的值在数组第一位
+     * 4、重复步骤2、3，得到一个数值从小到大排列的数组
      * @param array
      * @return int[]
      */
@@ -58,13 +68,20 @@ public class SortService {
         if (array.length <= 1) {
             return array;
         }
+        int minIndex;
+        // 外层循环从数组第一位开始遍历
         for (int i = 0; i< array.length; i++) {
-            int minIndex = i;
+            // 默认将最小值定义为第一位
+            minIndex = i;
+            // 内层循环从数组第二位开始遍历
             for (int j = i + 1; j < array.length; j++) {
+                // 当第二位数值小于第一位
                 if (array[minIndex] > array[j]) {
+                    // 将最小值定义为第二位的数值
                     minIndex = j;
                 }
             }
+            // 交换第二位和第一位的数值
             int temp = array[minIndex];
             array[minIndex] = array[i];
             array[i] = temp;
@@ -73,7 +90,10 @@ public class SortService {
     }
 
     /**
-     * 插入排序
+     * 插入排序：
+     * 1、可近似理解为扑克牌抓牌时从左至右从小到大排列，
+     * 当新抓一张牌时，按顺序插入已有的手牌中
+     * 2、默认第一个值是有序的，从array[1]遍历到array[array.length-1],依次按顺序插入
      * @param array
      * @return int[]
      */
@@ -81,40 +101,53 @@ public class SortService {
         if (array.length <= 1) {
             return array;
         }
-        for (int i = 0; i < array.length - 1; i++) {
-            int current = array[i + 1];;
-            int preIndex = i;
-            while (preIndex >= 0 && current < array[preIndex]) {
-                array[preIndex + 1] = array[preIndex];
-                preIndex--;
+        int i, j;
+        // 要插入的数据
+        int insertData;
+        // 从数组的第二个元素开始循环将数组中的元素插入
+        for (i = 1; i < array.length; i++) {
+            // 设置数组中的第2个元素为第一次循环要插入的数据
+            insertData = array[i];
+            j = i - 1;
+            while (j >= 0 && insertData < array[j]) {
+                // 如果要插入的元素小于第j个元素,就将第j个元素向后移动
+                array[j + 1] = array[j];
+                j--;
             }
-            array[preIndex + 1] = current;
+            // 直到要插入的元素不小于第j个元素,将insertData插入到数组中
+            array[j + 1] = insertData;
         }
         return array;
     }
 
     /**
-     * 希尔排序
+     * 希尔排序：
+     * 1、将包含n个元素的数组，分成n/2个数组序列，第一个数据和第n/2+1个数据为一对...
+ 　　* 2、对每对数据进行比较和交换，排好顺序；
+ 　　* 3、然后分成n/4个数组序列，再次排序；
+ 　　* 4、不断重复以上过程，随着序列减少并直至为1，排序完成。
      * @param array
      * @return int[]
      */
     public int[] shellSort(int[] array) {
-        int len = array.length;
-        int temp;
-        int gap = len / 2;
-        while (gap > 0) {
-            for (int i = gap; i < len; i++) {
-                temp = array[i];
-                int preIndex = i - gap;
-                while (preIndex >= 0 && array[preIndex] > temp) {
-                    array[preIndex + gap] = array[preIndex];
-                    preIndex -= gap;
-                }
-                array[preIndex + gap] = temp;
+        // i表示希尔排序中的第n/2+1个元素（或者n/4+1）
+        // j表示希尔排序中从0到n/2的元素（n/4）
+        // r表示希尔排序中n/2+1或者n/4+1的值
+        int i, j, r, tmp;
+        // 划组排序
+        for(r = array.length / 2; r >= 1; r /= 2) {
+            for(i = r; i < array.length; i++) {
+                tmp = array[i];
+                j = i - r;
+                // 插入排序
+                 while(j >= 0 && tmp < array[j]) {
+                     array[j+r] = array[j];
+                     j -= r;
+                 }
+                array[j+r] = tmp;
             }
-            gap /= 2;
-        }
-        return array;
+         }
+         return array;
     }
 
     /**
@@ -126,7 +159,9 @@ public class SortService {
         if (array.length <= 1) {
             return array;
         }
+        // 找到数组中间点
         int mid = array.length / 2;
+        // 根据中间点生成2个新的数组
         int[] left = Arrays.copyOfRange(array, 0, mid);
         int[] right = Arrays.copyOfRange(array, mid, array.length);
         return merge(mergeSort(left), mergeSort(right));
